@@ -1,5 +1,4 @@
 from flask import Flask, render_template, send_from_directory, request
-import vaccine
 from hashlib import sha256
 from collections import Counter
 from inputimeout import inputimeout, TimeoutOccurred
