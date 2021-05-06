@@ -412,7 +412,7 @@ def get_beneficiaries(request_header):
 
         print(f'Selected beneficiaries: ')
         display_table(reqd_beneficiaries)
-        return reqd_beneficiaries
+        return refined_beneficiaries
 
     else:
         print('Unable to fetch beneficiaries')

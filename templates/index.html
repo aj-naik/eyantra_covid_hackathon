@@ -5,36 +5,43 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="static/css/main.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous" />
+  <link type="text/css" href="{{ url_for('static', filename='/css/main.css') }}" rel="stylesheet" />
+
+  <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+    crossorigin="anonymous"></script>
+  <script defer src="{{ url_for('static', filename='/js/main.js') }}"></script>
+
   <title>Vaccination Bot</title>
 </head>
 
 <body>
-  <h1>Vaccination Bot</h1>
+  <h1 class="text-light">Vaccination Bot</h1>
   <div class="container">
-    <form action="/" method="post">
-      <div class="input-group">
-        <input type="number" class="form-control" placeholder="Mobile No." aria-label="Mobile Number"
-          aria-describedby="button-addon2" name='mobile_number'>
-        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Submit</button>
+    
+      <div class=" verification col-md-3" style="left: 50%;">
+        <form id="number-form" action="/" method="post">
+        <div class="mobile-input input-group">
+          <input type="number" class="form-control" placeholder="Mobile No." aria-label="Mobile Number"
+            aria-describedby="button-addon2" name='mobile_number'>
+          <button class="btn btn-dark text-light" type="submit" id="mobile-button">Submit</button>
+        </div>
+        <div class="otp-input input-group">
+          <input type="number" class="form-control" placeholder="OTP" aria-label="otp" aria-describedby="button-addon2"
+            name='otp'>
+          <button class="btn btn-dark text-light" type="submit" id="otp-button">Submit</button>
+        </div>
+        </form>
+
+        <button class="btn btn-dark text-light" formaction="/book" type="submit" id="check">Check Beneficiaries</button>
       </div>
-
-
-      <div class="input-group">
-        <input type="number" class="form-control" placeholder="OTP" aria-label="OTP" aria-describedby="button-addon2"
-          name='otp'>
-        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Submit</button>
-      </div>
-
-      <button class="btn btn-outline-secondary" formaction = "/book" type="submit" id="button-addon2">Submit</button>
     </form>
   </div>
 
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
-  integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
 
 </html>

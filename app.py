@@ -15,7 +15,7 @@ import sys
 import os
 
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='static')
 app.config.from_object(__name__)
 sess = Session()
 request_header = {
@@ -39,7 +39,7 @@ def index():
             base_request_header = {
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
             }
-            time.sleep(5)
+            time.sleep(10)
             OTP = request.form.get("otp")
             txnId = generate_OTP(mobile, base_request_header)
             token = generate_token(OTP, txnId, base_request_header)
@@ -62,7 +62,7 @@ def index():
 
 
 
-headings = ("IDX","Beneficiary Reference ID","Name","Vaccine","Age","Status")
+headings = ("Beneficiary Reference ID","Name","Vaccine","Age","Status")
 # table = (get_beneficiaries(request_header=request_header))
 
 
@@ -71,8 +71,12 @@ headings = ("IDX","Beneficiary Reference ID","Name","Vaccine","Age","Status")
 def book():
     print(session['request_header'])
     print("Fetching registered beneficiaries.. ")
-    tables = get_beneficiaries(session['request_header'])[0]
-    data = (tables.values())
+    tables = get_beneficiaries(session['request_header'])
+    print("______________________________TYPE tables: ",type(tables),"_______________________________")
+    data = tables
+    
+    print("______________________________TYPE data: ",type(data),"_______________________________")
+    print("DATA: ",data)
     return render_template("book.html", headings = headings, data=data)
 
 
