@@ -401,7 +401,7 @@ def get_beneficiaries(request_header):
         #    Please do not try to club together booking for younger and older beneficiaries.
         ###################################################
         """)
-        reqd_beneficiaries = input('Enter comma separated index numbers of beneficiaries to book for : ')
+        reqd_beneficiaries = '1'
         beneficiary_idx = [int(idx) - 1 for idx in reqd_beneficiaries.split(',')]
         reqd_beneficiaries = [{
             'beneficiary_reference_id': item['beneficiary_reference_id'],
@@ -433,7 +433,7 @@ def get_min_age(beneficiary_dtls):
     return min_age
 
 
-def generate_token_OTP(mobile, request_header):
+def generate_OTP(mobile, request_header):
     """
     This function generate OTP and returns a new token
     """
@@ -444,12 +444,13 @@ def generate_token_OTP(mobile, request_header):
 
     if txnId.status_code == 200:
         txnId = txnId.json()['txnId']
+        return txnId
     else:
         print('Unable to Create OTP')
         print(txnId.text)
         os.system("pause")
 
-    OTP = input("Enter OTP: ")
+def generate_token(OTP,txnId,request_header):
     data = {"otp": sha256(str(OTP).encode('utf-8')).hexdigest(), "txnId": txnId}
     print(f"Validating OTP..")
 
