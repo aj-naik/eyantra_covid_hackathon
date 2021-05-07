@@ -23,6 +23,7 @@
 
             {% for row in data %}
             <tr>
+                <td>{{ row.idx }}</td>
                 <td>{{ row.beneficiary_reference_id }}</td>
                 <td>{{ row.name }}</td>
                 <td>{{ row.vaccine }}</td>
@@ -33,6 +34,34 @@
 
         </table>
     </div>
+
+    <form id="number-form" action="/" method="post">
+    <div class="idx-input input-group">
+          <input type="number" class="form-control" placeholder="ID" aria-label="id" aria-describedby="button-addon2"
+            name='idx'>
+          <button class="btn btn-dark text-light" type="submit" id="otp-button">Submit</button>
+    </div>
+    </form>
+
+    <table class="table table-striped table-dark">
+            <tr>
+                {% for header in headings %}
+                <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+
+            {% for row in data %}
+            <tr>
+                <td>{{ row.idx }}</td>
+                <td>{{ row.beneficiary_reference_id }}</td>
+                <td>{{ row.name }}</td>
+                <td>{{ row.vaccine }}</td>
+                <td>{{ row.age }}</td>
+                <td>{{ row.status }}</td>
+            </tr>
+            {% endfor %}
+
+        </table>
 
 
 </body>

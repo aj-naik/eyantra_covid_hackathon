@@ -62,8 +62,7 @@ def index():
 
 
 
-headings = ("Beneficiary Reference ID","Name","Vaccine","Age","Status")
-# table = (get_beneficiaries(request_header=request_header))
+headings = ("IDX","Beneficiary Reference ID","Name","Vaccine","Age","Status")
 
 
 

@@ -363,63 +363,94 @@ def get_districts(request_header):
         sys.exit(1)
 
 
+
+def gen_beneficiaries(request_header):
+    beneficiaries = requests.get(BENEFICIARIES_URL, headers=request_header)
+
+    if beneficiaries.status_code == 200:
+        beneficiaries = beneficiaries.json()['beneficiaries']
+    else:
+        print('Status code not 200')
+    return beneficiaries
+
 def get_beneficiaries(request_header):
+
     """
     This function
         1. Fetches all beneficiaries registered under the mobile number,
         2. Prompts user to select the applicable beneficiaries, and
         3. Returns the list of beneficiaries as list(dict)
     """
-    beneficiaries = requests.get(BENEFICIARIES_URL, headers=request_header)
+    beneficiaries = gen_beneficiaries(request_header)
+    # if beneficiaries:
+    refined_beneficiaries = []
+    for beneficiary in beneficiaries:
+        beneficiary['age'] = datetime.datetime.today().year - int(beneficiary['birth_year'])
 
-    if beneficiaries.status_code == 200:
-        beneficiaries = beneficiaries.json()['beneficiaries']
+        tmp = {
+            'beneficiary_reference_id': beneficiary['beneficiary_reference_id'],
+            'name': beneficiary['name'],
+            'vaccine': beneficiary['vaccine'],
+            'age': beneficiary['age'],
+            'status': beneficiary['vaccination_status']
+        }
+        refined_beneficiaries.append(tmp)
+    return refined_beneficiaries
 
-        refined_beneficiaries = []
-        for beneficiary in beneficiaries:
-            beneficiary['age'] = datetime.datetime.today().year - int(beneficiary['birth_year'])
+def select_beneficiaries(reqd_beneficiaries,request_header):
 
-            tmp = {
-                'beneficiary_reference_id': beneficiary['beneficiary_reference_id'],
-                'name': beneficiary['name'],
-                'vaccine': beneficiary['vaccine'],
-                'age': beneficiary['age'],
-                'status': beneficiary['vaccination_status']
-            }
-            refined_beneficiaries.append(tmp)
+    # display_table(refined_beneficiaries)
+    print("""
+    ################# IMPORTANT NOTES #################
+    # 1. While selecting beneficiaries, make sure that selected beneficiaries are all taking the same dose: either first OR second.
+    #    Please do no try to club together booking for first dose for one beneficiary and second dose for another beneficiary.
+    #
+    # 2. While selecting beneficiaries, also make sure that beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN.
+    #    Please do no try to club together booking for beneficiary taking COVISHIELD with beneficiary taking COVAXIN.
+    #
+    # 3. If you're selecting multiple beneficiaries, make sure all are of the same age group (45+ or 18+) as defined by the govt.
+    #    Please do not try to club together booking for younger and older beneficiaries.
+    ###################################################
+    """)
+    
+    # beneficiaries = requests.get(BENEFICIARIES_URL, headers=request_header)
 
-        display_table(refined_beneficiaries)
-        print("""
-        ################# IMPORTANT NOTES #################
-        # 1. While selecting beneficiaries, make sure that selected beneficiaries are all taking the same dose: either first OR second.
-        #    Please do no try to club together booking for first dose for one beneficiary and second dose for another beneficiary.
-        #
-        # 2. While selecting beneficiaries, also make sure that beneficiaries selected for second dose are all taking the same vaccine: COVISHIELD OR COVAXIN.
-        #    Please do no try to club together booking for beneficiary taking COVISHIELD with beneficiary taking COVAXIN.
-        #
-        # 3. If you're selecting multiple beneficiaries, make sure all are of the same age group (45+ or 18+) as defined by the govt.
-        #    Please do not try to club together booking for younger and older beneficiaries.
-        ###################################################
-        """)
-        reqd_beneficiaries = '1'
-        beneficiary_idx = [int(idx) - 1 for idx in reqd_beneficiaries.split(',')]
-        reqd_beneficiaries = [{
-            'beneficiary_reference_id': item['beneficiary_reference_id'],
-            'vaccine': item['vaccine'],
-            'age': item['age'],
-            'status': item['vaccination_status']
-        } for idx, item in enumerate(beneficiaries) if idx in beneficiary_idx]
+    # if beneficiaries.status_code == 200:
+    #     beneficiaries = beneficiaries.json()['beneficiaries']
 
-        print(f'Selected beneficiaries: ')
-        display_table(reqd_beneficiaries)
-        return refined_beneficiaries
+    #     refined_beneficiaries = []
+    #     for beneficiary in beneficiaries:
+    #         beneficiary['age'] = datetime.datetime.today().year - int(beneficiary['birth_year'])
 
-    else:
-        print('Unable to fetch beneficiaries')
-        print(beneficiaries.status_code)
-        print(beneficiaries.text)
-        os.system("pause")
-        return []
+    #         tmp = {
+    #             'beneficiary_reference_id': beneficiary['beneficiary_reference_id'],
+    #             'name': beneficiary['name'],
+    #             'vaccine': beneficiary['vaccine'],
+    #             'age': beneficiary['age'],
+    #             'status': beneficiary['vaccination_status']
+    #         }
+    #         refined_beneficiaries.append(tmp)
+    beneficiaries = gen_beneficiaries(request_header)
+
+    # reqd_beneficiaries = '1'
+    beneficiary_idx = [int(idx) - 1 for idx in reqd_beneficiaries.split(',')]
+    reqd_beneficiaries = [{
+        'beneficiary_reference_id': item['beneficiary_reference_id'],
+        'vaccine': item['vaccine'],
+        'age': item['age'],
+        'status': item['vaccination_status']
+    } for idx, item in enumerate(beneficiaries) if idx in beneficiary_idx]
+
+    print(f'Selected beneficiaries: ')
+    # display_table(reqd_beneficiaries)
+    return reqd_beneficiaries
+
+    # else:
+    #     print('Unable to fetch beneficiaries')
+    #     print(beneficiaries.status_code)
+    #     print(beneficiaries.text)
+    #     os.system("pause")
+    #     return []
 
 
 def get_min_age(beneficiary_dtls):
